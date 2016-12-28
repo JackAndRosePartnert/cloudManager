@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}首页{% endblock %}
+{% block links01 %}class="liactive"{% endblock %}
+{% block css %}
+<link href="site_static/css/index.css" rel="stylesheet">
+{% endblock %}
+{% block container %}
+<div  class="container-fluid banner">
+	<div class="row layout">
+		<h1></h1>
+	</div>
+	<div class="layout">
+		<h2></h2>
+		<p></p>
+	</div>
+</div>
+
+<div class="container-fluid bitDataIntro">
+	<div class="row layout">
+		<div class="col-md-6">
+			<div class="intro bigDataImg"></div>
+			<h3></h3>
+			<p class="line2"></p>
+		</div>
+		<div class="col-md-6">
+			<div class="intro ylBigDataImg"></div>
+			<h3></h3>
+			<p class="line2"></p>
+		</div>
+	</div>
+</div>
+{% endblock %}

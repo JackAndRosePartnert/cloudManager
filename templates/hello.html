@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>smartcloud</title>
+</head>
+<body>
+    <p>image1:【第一张图片路径通过STATIC_URL访问】</p>
+    <img src='{{ STATIC_URL }}images/sheep.png' />
+    <p>image2:【第二张图片路径通过/static/访问】</p>
+    <img src='/static/images/sheep.png' />
+    </body>
+</html>

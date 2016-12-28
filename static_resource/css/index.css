@@ -1,0 +1,38 @@
+/*Banner*/
+.banner{
+	background-image:url(/site_static/images/banner.png);
+	background-size:100% 100%;
+	margin-top:-20px;
+	color:#fff;
+}
+.banner .row{
+	margin:150px auto;
+	text-align:center;
+}
+.row span{
+	font-size:80px;
+}
+.bitDataIntro{
+	color:#333;
+	text-align:center;
+	padding:10px;
+}
+.bitDataIntro h3 ,.bitDataIntro p{
+	text-align:left;
+	line-height:1.5;
+}
+.intro{
+	display: inline-block;
+	width:256px;
+	height:143px;
+}
+.bigDataImg{
+	background-image: url(/site_static/images/bigData.jpg);
+}
+.ylBigDataImg{
+	background-image: url(/site_static/images/ylBigData.jpg);
+}
+.intro +h3{
+	color:#0d7fd4;
+}
+

@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% block title %}Get Password{% endblock %}
+{% block js %}
+	<script src="/site_static/js/captcha_load.js"></script>
+<script src="/site_static/js/jquery.validate.js"></script>
+<script src="/site_static/js/common.js"></script>
+<script type="text/javascript">
+
+document.getElementById("id_captcha_1").onfocus = function(){
+    test = document.getElementById("captcha").innerHTML;
+    if(test != ""){
+        document.getElementById("captcha").innerHTML = "";
+    }
+}
+
+$(document).ready(function(){
+    if(!(document.cookie || navigator.cookieEnabled))
+         {
+            Showbo.Msg.alert('Cookie Error<br>Cookies support are disabled by your browser.Please enable it in the browser setting.');
+         }
+});
+
+function step1back(data){
+	data = eval ("(" + data + ")");
+	if (data['status'] == 'success'){
+		$("#step1").animate({width:"0px"},"normal");
+		$("#step1").hide("normal");
+		$("#step2").fadeIn("normal");
+		$("#step2").css("display","block")
+	}else{
+		$("#registered").html("<p class='alert alert-error'>您的账户不存在，请您检查输入的邮箱</p>");
+	}
+}
+
+$(document).ready(function(){
+	validate02 = $('#step_form02').validate();	
+    $('#step_form02').submit(function(){
+		if(validate02.numberOfInvalids()<=0){
+        $.post('/check_number/',
+        {"number":$("#number").val()},
+        step2back);
+    return false;}else{}
+    }); 
+});
+
+function step2back(data){
+	data = eval ("(" + data + ")");
+    if (data.status == 'success'){
+        $("#step2").animate({width:"0px"},"normal");
+        $("#step2").hide("normal");
+        $("#step3").fadeIn("normal");
+	}
+}
+
+
+$(document).ready(function(){
+	validate03 = $('#step_form03').validate();	
+    $('#step_form03').submit(function(){
+		if(validate03.numberOfInvalids()<=0){
+        $.post('/set_pwd/',
+        {"newPasswd":$("#newPasswd").val()},
+        step3back);}else{}
+    return false;
+    });
+});
+
+
+function step3back(data){
+    data = eval ("(" + data + ")");
+    if (data.status != 'false'){
+        window.location.href = data['status'];
+    }else{
+		$("#message").html("please get the check number again")
+		$("#step3").hide();
+		$("#step1").show();
+	}   
+}
+
+function captcha_reload(){
+    $.post("/captcha/captcha_reload/", reloadback);
+    return false;
+}
+function reloadback(data){
+    url = data.image_url;
+    $('.captcha').filter(":first").attr('src', data.image_url);
+    $('#id_captcha_0').val(data.key);
+    $('#id_captcha_1').val('');
+}
+</script>
+{% endblock %}
+{% block container %}
+
+<p></p>
+<div class="container" style="margin-bottom: 50px;">
+
+<div class="row">
+        <div class="span8">
+                <fieldset>
+                <legend style="padding-top: 40px; font-size:23px;">找回密码</legend>
+
+				<div id="step1">
+				<form id="step_form01" class="form-horizontal" method='post' action=''>
+		{% csrf_token %}
+                <div class="control-group">
+                    {% if error %}
+                        <div class='alert alert-error' style="margin-top:20px">{{ message }}</div>
+                    {% endif %}
+					<p style="margin-left: 145px; margin-top: 20px; font-size:13px; margin-bottom: 20px; color:#4B9808;">请输入您的注册邮箱地址.</p>
+                    <label class="control-label">邮箱</label>
+                    <div class="controls">
+                        {{ form.email }}
+					<!--	<input name="account" id="account" type="text" >   -->
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">验证码</label>
+                   <!-- <span style="padding-left: 20px;">Please input Capital letter.</span> -->
+                    <div class="controls">
+                        {{ form.captcha }}<a class="btn btn-small btn-primary" type="button" style="" onclick="captcha_reload();">刷新</a>
+                                         <div class="text-error" id="captcha">{% if form.captcha.errors %}无效验证码{% endif %}</div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label"></label>
+                    <div class="controls">
+                        <button id="step01" type="submit" class="btn btn-primary" >确认</button>
+                    </div>
+                </div>
+				</form>
+				</div>
+
+				
+				<div id="step2" style="display:none;">
+				<form id="step_form02" class="form-horizontal" method='post' action=''>    
+                <div class="control-group">
+					<p style="margin-left: 125px; margin-top: 20px; font-size:13px; color:#4B9808; margin-bottom: 20px;">Please enter the auth code in your email.</p>	
+                    <label class="control-label">Auth Code</label>
+                    <div class="controls">
+                        <input name="number" id="number" type="text" >
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label"></label>
+                    <div class="controls">
+                        <button id="step02" type="submit" class="btn btn-primary" >Confirm</button>
+                    </div>
+                </div>
+                </form>
+				</div>
+
+			
+				<div id="step3" style="display:none;">
+				<form id="step_form03" class="form-horizontal" method='post' action=''>    
+                <div class="control-group">
+					 <p style="margin-left: 125px; margin-top: 20px; font-size:13px; color:#4B9808; margin-bottom: 20px;">Please enter your new password.</p>
+                    <label class="control-label">New Password</label>
+                    <div class="controls">
+                        <input name="newPasswd" id="newPasswd" type="password" autocomplete="off"/>
+                    </div>
+                </div>
+
+				<div class="control-group">
+					 <p style="margin-left: 125px; margin-top: 20px; font-size:13px; color:#4B9808; margin-bottom: 20px;">Please retype your new password.</p>
+                    <label class="control-label">Confirm</label>
+                    <div class="controls">
+                        <input name="rePasswd" id="rePasswd" type="password" autocomplete="off" />
+                    </div>
+                </div>	
+		
+                <div class="control-group">
+                    <label class="control-label"></label>
+                    <div class="controls">
+                        <button id="step03" type="submit" class="btn btn-primary" >Confirm</button>
+                    </div>
+                </div>
+                </form>
+				</div>
+	
+
+                </fieldset>
+            </div>
+        </div>
+</div>
+
+
+{% endblock %}
+

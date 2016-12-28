@@ -1,0 +1,129 @@
+{% extends "user/baseside.html" %}
+{% block title %}Change password{% endblock %}
+
+{% block js %}
+<script src="/site_static/js/jquery.validate.js"></script>
+<script src="/site_static/js/common.js"></script>
+<script src="/site_static/js/jquery.blockUI.js"></script>
+<script type="text/javascript">
+
+    var secs =5; //倒计时的秒数 
+    var URL ; 
+    function Load(url){ 
+        URL =url; 
+        for(var i=secs;i>=0;i--) 
+        { 
+            window.setTimeout('doUpdate(' + i + ')', (secs-i) * 1000); 
+         } 
+    } 
+    function doUpdate(num) 
+    { 
+        document.getElementById('showsec').innerHTML = ' Auto redirect after '+num+' seconds...' ; 
+        if(num == 0) { window.location=URL; } 
+    }
+
+$(document).ready(function(){
+    validate =  $('#modify_pwd').validate();
+    $('#modify_pwd').submit(function(){
+    if(validate.numberOfInvalids() <= 0){
+        $.post('',
+        {"pre_pwd":$("#pre_pwd").val(), "new_pwd":$("#new_pwd").val()},
+    step1back);}
+    return false;
+    });
+});
+
+
+function step1back(data){
+    data = eval ("(" + data + ")");
+    console.log(data.status); 
+    if (data.status == "success"){
+        $.blockUI({message:$('#changePwd')});
+    }
+    else if(data.status == "logout"){
+        window.location.href = "/logout/";
+    }   
+    else if(data.status == "false"){
+        $("#updateerror").show();
+    }   
+}
+
+function changePwd(){
+    window.location.href = "/console/userinfo/";
+}
+</script>
+{% endblock %}
+
+
+{% block rcontent %}
+
+<p></p>
+<div class="container">
+
+<div class="row">
+    <div class="span8">
+        <div class="alert alert-success" id="updatesuccess" style="font-size:20px;display:none;">
+            <p>密码修改成功!</p>
+            <p id="showsec" style="font-size:14px;"></p>
+        </div>
+        <div class="alert alert-error" id="updateerror" style="font-size:20px;display:none;">
+            <p>密码错误!</p>
+            <p id="showsec" style="font-size:14px;"></p>
+        </div>
+        <!--div id="showsec" style="text-align:center;">Auto redirect after 5 seconds...</div-->
+                <fieldset style="margin-bottom:50px">
+                <div style="padding-top: 40px; font-size:23px;border-bottom:1px solid #eee; padding-bottom: 20px;">修改密码</div>
+
+
+                <form id="modify_pwd" class="form-horizontal" method='post' action=''>    
+		{% csrf_token %}
+                <div class="control-group" style="margin-top:30px;">
+                    <label class="control-label">当前密码</label>
+                    <div class="controls">
+                        <input name="pre_pwd" id="pre_pwd" type="password" autocomplete="off"><br>
+                        <span>(如果当前密码为空此项可不填)</span>
+                    </div>
+                </div>
+
+                
+                <div class="control-group">
+                    <label class="control-label">新密码</label>
+                    <div class="controls">
+                        <input name="new_pwd" id="new_pwd" type="password" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">确认新密码</label>
+                    <div class="controls">
+                        <input name="re_pwd" id="re_pwd" type="password" autocomplete="off">
+                    </div>
+                </div>  
+				
+				<div class="control-group">	
+					<div class="controls" id="message">	
+					</div>
+				</div>
+
+                <div class="control-group">
+                    <label class="control-label"></label>
+                    <div class="controls">
+                        <button id="modify_pwd" type="submit" class="btn btn-primary" >确认</button>
+                    </div>
+                </div>
+                </form>
+                </div>
+
+
+                </fieldset>
+            </div>
+        </div>
+            <div style="display:none;">
+                <form action="#" id="changePwd" onsubmit="return false;">
+                    <p style="margin-top: 20px;">密码修改成功!</p>
+                    <button class="btn btn-primary" id="thanksbtn" type="submit" style="margin-top:10px;" onclick="changePwd();">Confirm</button>
+                </form>
+            </div> 
+</div>
+
+{% endblock %}

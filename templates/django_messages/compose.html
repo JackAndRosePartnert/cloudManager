@@ -1,0 +1,13 @@
+{% extends request.session.base %}
+{% load i18n %} 
+{% block rcontent %} 
+<h1>发送消息</h1>
+<form action="" method="post">
+{% csrf_token %} 
+<table>
+{{ form.as_table }}
+</table>
+<input type="submit" value="发送 &raquo;"/>
+</form>
+
+{% endblock %}

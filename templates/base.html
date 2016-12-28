@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="canonical" href="http://www.cloud.nite.org.cn"/>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="content-language" content="en-gb">
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<meta property="og:title" content="Home" />
+<meta property="og:url" content="http://www.cloud.nite.org.cn/" />
+<meta property="og:description" content="" />
+<meta property="og:locale" content="en_CH" />
+<meta property="og:site_name" content="云" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block tmpcss %} 
+<link href="/site_static/css/bootstrap.min.css" rel="stylesheet">
+<link href="/site_static/css/base.css" rel="stylesheet">
+{% endblock %}
+<link rel="shortcut icon" href="/site_static/images/favicon.ico">
+<script src="/site_static/js/plugin/jquery-2.1.4.min.js"></script>
+<script src="/site_static/js/frame/bootstrap.min.js"></script>
+<script>
+function signout() {
+    hello.logout();
+    window.location = "/logout/"
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
+{% block js %}{% endblock %}
+{% block css %}{% endblock %}
+<title>云计算实训平台 {% block title %}{% endblock %}</title>
+</head>
+<body>
+<nav class="navbar navbar-default" role="navigation">
+	<div class="container-fluid layout">      
+	<ul class="nav navbar-nav">
+		<li>
+		<a href="http://www.cloud.nite.org.cn/index.html"><img src="/site_static/images/logo.png"></a>
+		</li>
+		<li>
+			<a class="navcenter" href="index.html" ><span class="nav-title">首页</span></a>
+		</li>
+	</ul>
+        {% if not user.is_authenticated or request.user.username == "demo@stackinsider.com" %}
+	<ul class="nav navbar-nav navbar-right">
+		<li> 
+		<a class="navcenter hl" href={% url loginurl %}>登录</a>
+                </li>
+        </ul>
+        {% else %}
+	<ul class="nav navbar-nav navbar-right">
+		<li>
+			<a href="/console/" class="navcenter hl" >{{ request.user }}</a>
+		</li>
+		<li role="presentation" class="dropdown">
+			<a id="userinfo" class="dropdown-toggle navcenter" data-toggle="dropdown" href="#" role="button" aria-expanded="false" title="{{request.user.first_name}}">{{ request.user.first_name }}<span class="caret"></span></a>
+			<ul class="dropdown-menu" role="menu">
+				<li>
+					<a href="/userprofile/"><span class="glyphicon glyphicon-pencil"></span> 用户信息</a>
+				</li>
+				<li class="divider"></li>
+				<li class="sign_out">
+				<a href={% url logouturl %} onclick="signout()"><span class="glyphicon glyphicon-log-out"></span> 退出</a>
+				</li>
+			</ul>
+		</li>
+	</ul>
+       {% endif %}
+	</div>
+</nav>
+{% block container %}{% endblock %}    
+{% block content %}{% endblock %}
+{% block footer %}
+<footer class="container-fluid">
+	<div class="text"><span>©2015 </span><a class="link" href="http://www.webaddress.com" target="_blank"></a></div> 
+</footer>    
+{% endblock %}    
+</body>
+</html>                 

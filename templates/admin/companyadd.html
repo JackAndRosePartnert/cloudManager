@@ -1,0 +1,42 @@
+{% extends "admin/baseside.html" %}
+
+{% block title %}
+    Add Company
+{% endblock %}
+
+{% block rcontent %}
+    <div class="btn-toolbar">
+        <div class="btn-group">
+            {% url addcompanyurl as theaddcompanyurl %}
+            <a class="btn btn-default {%if request.path = theaddcompanyurl%} active {%endif%}" href={{ theaddcompanyurl }}><span class="glyphicon glyphicon-edit"></span>新建公司</a>
+            {% url listcompanyurl as thelistcompanyurl %}
+            <a class="btn btn-default {%if request.path = thelistcompanyurl%} active {%endif%}" href={{ thelistcompanyurl }}><span class="glyphicon glyphicon-list"></span>公司列表</a>
+        </div>
+    </div>
+
+    <hr/>
+
+    <form class="form-horizontal" role="form" action={% url addcompanyurl %} method="POST" >
+    {% csrf_token %}
+
+        {% for item in form %}
+            <div class="form-group">
+                <label class="control-label col-md-2">{{item.label}}</label>
+                <div class="col-md-4">
+                    {{item}}
+                </div>
+                <div class="col-md-offset-1 col-md-7">
+                    {{item.errors}}
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="form-group">
+            <div class="col-md-offset-1 col-md-10">
+                <button type="submit" class="btn btn-danger btn-sm">新 增</button>
+            <div>
+        </div>
+    </form>
+</div>
+</div>
+{% endblock %}

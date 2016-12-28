@@ -1,0 +1,63 @@
+{% extends "user/baseside.html" %}
+
+{% block title %}
+    Userinfo page
+{% endblock %}
+
+{% block rcontent %}
+<form class="form-horizontal" role="form" action="" method="POST" style="background:#cccccc">
+    {% csrf_token %}
+    <div>
+        <label>个人信息</label>
+        <hr/>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">邮箱</label>
+            <div class="col-md-2">
+                <input type='text'  name='email' value='{{ user.email  }}' disabled='disabled'/>
+            </div>
+            <a style="display: inline; color:#0088CC; font-size: 14px;" href="{% url changepwdurl %}">修改密码？</a>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">最后登录时间</label>
+            <div class="col-md-2">
+                <input type="datetime" name ='datetime' value ='{{ user.last_login  }}' disabled='disabled' />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">姓名</label>
+            <div class="col-md-2">
+                <input type='text'  name='name' value='{{ userprofile.name  }}' />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">手机号</label>
+            <div class="col-md-2">
+                <input type='text'  name='phone' value='{{ userprofile.phone  }}' />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-1 col-md-10">
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('确定修改吗？')">确定修改</button>
+                <div>
+                    <div class="col-md-offset-1 col-md-10">{{message}}</div>
+                </div>
+            </div>
+        </div>
+
+        <label>服务</label>
+	<hr/>
+        <div class="form-group">
+            <div class="form-group">
+                <label class="control-label col-md-2">针对你的服务人员</label>
+                <div class="col-md-2">
+                    <input type='text'  name='' value='' disabled = 'disabled'/>
+                </div>
+            </div>
+        </div>
+	</div>
+        </form>
+    </div>
+</div>
+{% endblock %}

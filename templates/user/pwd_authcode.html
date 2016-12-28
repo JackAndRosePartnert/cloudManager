@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Get Password{% endblock %}
+{% block js %}
+<script src="/site_static/js/jquery.validate.js"></script>
+<script src="/site_static/js/common.js"></script>
+<script src="/site_static/js/captcha_load.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	validate02 = $('#step_form02').validate();	
+	$('#step_form02').submit(function(){
+		if(validate02.numberOfInvalids()<=0){
+        		$.post('/check_number/',
+        			{"number":$("#number").val()},
+        			step2back);
+    			return false;
+		}else{}
+   	 }); 
+});
+
+function step2back(data){
+	data = eval ("(" + data + ")");
+    if (data.status == 'success'){
+        $("#step2").animate({width:"0px"},"normal");
+        $("#step2").hide("normal");
+        $("#step3").fadeIn("normal");
+	}
+    else if(data.status == 'expired'){
+		$("#message02").html("<p class='alert alert-error'>The auth code is expired!</p>");
+	}
+}
+
+
+$(document).ready(function(){
+	validate03 = $('#step_form03').validate();	
+    $('#step_form03').submit(function(){
+		if(validate03.numberOfInvalids()<=0){
+        $.post('/set_pwd/',
+        {"newPasswd":$("#newPasswd").val()},
+        step3back);}else{}
+    return false;
+    });
+});
+
+
+function step3back(data){
+    data = eval ("(" + data + ")");
+    if (data.status != 'false'){
+        window.location.href = data['status'];
+    }else{
+		$("#message").html("please get the check number again")
+		$("#step3").hide();
+		$("#step1").show();
+	}   
+}
+</script>
+{% endblock %}
+
+
+{% block container %}
+<p></p>
+<div class="container">
+
+<div class="row">
+        <div class="span8">
+                <fieldset>
+                <legend style="padding-top: 40px; font-size:23px;">找回密码</legend>
+
+				<div id="step2">
+		<form id="step_form02" class="form-horizontal" method='post' action=''>    
+		{% csrf_token %}
+		<div class="control-group">
+                    <div id="message02"></div>
+					<p style="margin-left: 125px; margin-top: 20px; font-size:13px; color:#4B9808; margin-bottom: 20px;">请输入邮箱中的授权码</p>	
+                    <label class="control-label">授权码</label>
+                    <div class="controls">
+                        <input name="number" id="number" type="text" >
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label"></label>
+                    <div class="controls">
+                        <button id="step02" type="submit" class="btn btn-primary" >确认</button>
+                    </div>
+                </div>
+                </form>
+				</div>
+
+			
+				<div id="step3" style="display:none;">
+				<form id="step_form03" class="form-horizontal" method='post' action=''>    
+                <div class="control-group">
+					 <p style="margin-left: 125px; margin-top: 20px; font-size:13px; color:#4B9808; margin-bottom: 20px;">请输入新密码</p>
+                    <label class="control-label">新密码</label>
+                    <div class="controls">
+                        <input name="newPasswd" id="newPasswd" type="password" autocomplete="off"/>
+                    </div>
+                </div>
+
+				<div class="control-group">
+					 <p style="margin-left: 125px; margin-top: 20px; font-size:13px; color:#4B9808; margin-bottom: 20px;">确认新密码</p>
+                    <label class="control-label">确认</label>
+                    <div class="controls">
+                        <input name="rePasswd" id="rePasswd" type="password" autocomplete="off"/>
+                    </div>
+                </div>	
+		
+                <div class="control-group">
+                    <label class="control-label"></label>
+                    <div class="controls">
+                        <button id="step03" type="submit" class="btn btn-primary" >确认</button>
+                    </div>
+                </div>
+                </form>
+				</div>
+	
+
+                </fieldset>
+            </div>
+        </div>
+</div>
+
+
+{% endblock %}
+
